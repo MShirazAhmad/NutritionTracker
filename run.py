@@ -395,8 +395,8 @@ class Ui_MainWindow(object):
 
 
 from MplWidget import MplWidget
-from mplwidget1 import MplWidget1
-from mplwidget2 import MplWidget2
+from MplWidget1 import MplWidget1
+from MplWidget2 import MplWidget2
 
 
 if __name__ == "__main__":
