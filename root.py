@@ -888,7 +888,6 @@ class Ui_MainWindow(object):
                 self.radioButton_Snacks.setChecked(True)
 
 
-
         except Exception as e:
             self.errMessage("Printing to Table:", str(e))
 
@@ -927,4 +926,3 @@ if __name__ == "__main__":
         ui.setupUi(MainWindow)
         MainWindow.show()
         sys.exit(app.exec_())
-
