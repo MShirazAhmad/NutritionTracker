@@ -1,17 +1,19 @@
-print(Mass, Date)
+global MassAnalytics
 import pandas as pd
 
-global AccountInfo
-AccountInfo = pd.DataFrame({"Gender": ["Male"],
-                       "Name": ["Shiraz Ahmad"],
-                       "Age": [25], "Height": [5], "Mass": [53], "Activity": [1]})
+MassAnalytics = pd.read_csv("MassAnalytics.csv")
+MassAnalytics.Date = pd.to_datetime(MassAnalytics.Date)
+MassAnalytics["Mass"] = MassAnalytics["Mass"].astype(str)
+print(MassAnalytics)
+MassAnalytics=MassAnalytics.sort_values('Date').drop_duplicates('Mass',keep='last')
+MassAnalytics=MassAnalytics.dropna()
 
-AccountInfo=AccountInfo.astype(str)
-def BMR(Gender, Name, Age, Height, Mass, Activity):
-    if Gender == "Male":
-        BMR = 66 + (6.3 * Mass) + (12.9 * Height) - (6.8 * Age)
-    if Gender == "Female":
-        BMR = 655 + (4.3 * Mass) + (4.7 * Height) - (4.7 * Age)
-    return BMR
+import matplotlib.pyplot as plt
 
-A=BMR(AccountInfo["Name"].loc[0], int(AccountInfo["Age"].loc[0]), int(AccountInfo["Height"].loc[0]), int(AccountInfo["MassAccountInfo"].loc[0]), int(AccountInfo["Activity"].loc[0])):
+
+
+
+plt.plot(MassAnalytics.Date, MassAnalytics.Mass)
+plt.set_xlabel("Time")
+plt.set_ylabel("Mass")
+plt.show()
