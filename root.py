@@ -642,15 +642,18 @@ class Ui_MainWindow(object):
             import pandas as pd
             temp_var = self.dateEdit_Mass.date()
             var_date = temp_var.toPyDate()
-            MassLoad = pd.DataFrame({"Mass": [str(self.lineEdit_Mass.text())], "Date": [var_date]})
-            MassLoad.Date = pd.to_datetime(MassLoad.Date)
-            MassAnalytics = MassAnalytics.append(MassLoad,  ignore_index = True)
+            if str(self.lineEdit_Mass.text()) != '':
+                MassLoad = pd.DataFrame({"Mass": [str(self.lineEdit_Mass.text())], "Date": [var_date]})
+                MassLoad.Date = pd.to_datetime(MassLoad.Date)
+                MassAnalytics = MassAnalytics.append(MassLoad,  ignore_index = True)
+                MassAnalytics.to_csv('MassAnalytics.csv', index=False)
             self.MplWidget1.canvas.axes.clear()
             self.MplWidget1.canvas.axes.plot(MassAnalytics.Date, MassAnalytics.Mass)
             self.MplWidget1.canvas.axes.set_title('Mass Plot')
             self.MplWidget1.canvas.draw()
             print(MassAnalytics)
-            MassAnalytics.to_csv('MassAnalytics.csv', index=False)
+
+
         except Exception as e:
             self.errMessage("Reading Table:", str(e))
     def gen_chart_calories(self,CaloriesSum, CaloriesDate):
@@ -841,7 +844,6 @@ class Ui_MainWindow(object):
                 A = str(p)
                 cellinfo = QTableWidgetItem(A)
                 self.tableWidget_entry.setItem(int(self.tableWidget_entry.rowCount()-1), j, cellinfo)
-                ##print(j)
                 j += 1
             self.readTable_tableWidget_entry()
             TotalIntake = [sum(dfe[dfe.Date==str(var_date)].Calories), sum(dfe[dfe.Date==str(var_date)].Carbs), sum(dfe[dfe.Date==str(var_date)].Fat), sum(dfe[dfe.Date==str(var_date)].Protein), sum(dfe[dfe.Date==str(var_date)].Fibre)]
