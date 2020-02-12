@@ -118,7 +118,6 @@ class Ui_Dialog_Config(object):
         outF.write(str(Activity1) + "\n")
         outF.write(str(ReqCalorie1) + "\n")
         outF.close()
-        ##print("WritingDone")
     def CalorieCalculation(self):
         global ReqCalorie
         if self.comboBox_Activity.currentIndex()==0:
@@ -454,7 +453,6 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
         self.menubar.addAction(self.menuconfiguration.menuAction())
-
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -517,21 +515,10 @@ class Ui_MainWindow(object):
         self.pushButton_database_Delete.setText(_translate("MainWindow", "Delete Selected Row"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Database), _translate("MainWindow", "Database"))
         self.menuconfiguration.setTitle(_translate("MainWindow", "Configuration"))
-
-
-
-
-
-
-
-
-
         self.ProfileOpen()
         self.lineEdit_Goal_3.setText(str(ReqCalorie))
         self.lineEdit_Exercise.setText("0")
         self.pushButton_Save.clicked.connect(self.CaloriesSave)
-
-
         global CalorieAnalytics
         import pandas as pd
         if os.path.exists('CalorieAnalytics.csv') == False:
@@ -545,8 +532,6 @@ class Ui_MainWindow(object):
             CalorieAnalytics.Date = pd.to_datetime(CalorieAnalytics.Date)
             CalorieAnalytics["Calories"] = CalorieAnalytics["Calories"].astype(str)
             self.gen_chart_calories(CalorieAnalytics.Calories, CalorieAnalytics.Date)
-
-
         global MassAnalytics
         import pandas as pd
         if os.path.exists('MassAnalytics.csv') == False:
@@ -559,8 +544,6 @@ class Ui_MainWindow(object):
             MassAnalytics.Date = pd.to_datetime(MassAnalytics.Date)
             MassAnalytics["Mass"] = MassAnalytics["Mass"].astype(str)
             print(MassAnalytics)
-
-
         try:
             self.tableWidget_newentry_load()
         except:
@@ -569,16 +552,11 @@ class Ui_MainWindow(object):
         self.dateEdit_Mass.setDate(QDate.currentDate())
         self.printTOTable()
         self.tableWidget_database.cellChanged.connect(self.readTable)
-        #self.tableWidget_entry.cellChanged.connect(lambda: self.BMR(self.comboBox_Activity_2.currentText(), self.lineEdit_Name.text(), float(self.lineEdit_Age.text()), float(self.lineEdit_Height.text()),float(self.lineEdit_Mass.text()),self.comboBox_Activity.currentText()))
         self.tableWidget_database.setColumnWidth(0,70)
         self.tableWidget_entry.setColumnWidth(0, 70)
         self.tableWidget_entry.setColumnWidth(7, 80)
-        #self.pushButton_add.clicked.connect(self.readTable_tableWidget_entry)
         self.pushButton_entry_AddNewEntry.clicked.connect(self.NewItem)
-
-
         self.pushButton_database_AddNewEntry.clicked.connect(self.func_pushButton_database_AddNewEntry)
-#        self.pushButton_database_AddNewEntry.clicked.connect(self.load_profile)
         str_meal = ['Breakfast' , 'Lunch' , 'Dinner' , 'Snacks']
         self.comboBox_pickfood.addItems(list(df['Food']))
         self.comboBox_meal.addItems(str_meal)
@@ -588,7 +566,6 @@ class Ui_MainWindow(object):
         self.radioButton_Lunch.clicked.connect(lambda: self.gen_chart("Lunch"))
         self.radioButton_Dinner.clicked.connect(lambda: self.gen_chart("Dinner"))
         self.radioButton_Snacks.clicked.connect(lambda: self.gen_chart("Snacks"))
-
         self.pushButton_page.clicked.connect(self.gen_chart_mass)
         _translate = QtCore.QCoreApplication.translate
         self.label_profile.setText(_translate("MainWindow","Name: "+Name+ ",   Gender: "+Gender+",   Age: "+ str(Age) + ",   Required Calories: "+str(ReqCalorie)))
@@ -636,9 +613,7 @@ class Ui_MainWindow(object):
         Mass = float(Profile[4])
         Activity = Profile[5]
         ReqCalorie = float(Profile[6])
-        ##print(Gender, Name, Age, Height, Mass, Activity, ReqCalorie)
     def home_entry(self,Mass,Date):
-        ##print(Mass, Date)
         import pandas as pd
         global dfhome
         dfhome = pd.DataFrame({"Mass": [],
@@ -655,7 +630,6 @@ class Ui_MainWindow(object):
             print(dfeChart)
             sizes = [sum(dfeChart[dfeChart.Category==Meal].Calories), sum(dfeChart[dfeChart.Category==Meal].Carbs), sum(dfeChart.Fat), sum(dfeChart[dfeChart.Category==Meal].Protein), sum(dfeChart[dfeChart.Category==Meal].Fibre)]
             self.MplWidget.canvas.axes.clear()
-            #       self.canvas.axes.plot(t, cosinus_signal)
             self.MplWidget.canvas.axes.pie(sizes,labels=labels, radius=1.2,autopct='%1.1f%%',
                                  shadow=True, startangle=90,textprops={'fontsize': 7})
             self.MplWidget.canvas.axes.set_title(Meal+' Calories Breakdown')
@@ -673,9 +647,6 @@ class Ui_MainWindow(object):
             MassAnalytics = MassAnalytics.append(MassLoad,  ignore_index = True)
             self.MplWidget1.canvas.axes.clear()
             self.MplWidget1.canvas.axes.plot(MassAnalytics.Date, MassAnalytics.Mass)
-            # self.MplWidget.canvas.axes.pie(sizes,labels=labels, radius=1.2,autopct='%1.1f%%',
-            # shadow=True, startangle=90,textprops={'fontsize': 7})
-            #    self.MplWidget.canvas.axes.legend(labels, loc='upper right',fontsize=7,)
             self.MplWidget1.canvas.axes.set_title('Mass Plot')
             self.MplWidget1.canvas.draw()
             print(MassAnalytics)
