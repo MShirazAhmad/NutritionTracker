@@ -594,7 +594,7 @@ class Ui_MainWindow(object):
             CalorieLoad.Date = pd.to_datetime(CalorieLoad.Date)
             CalorieAnalytics = CalorieAnalytics.append(CalorieLoad,  ignore_index = True)
             self.gen_chart_calories(CalorieAnalytics.Calories, CalorieAnalytics.Date)
-            dfe.to_csv('CalorieAnalytics.csv', index=False)
+            CalorieAnalytics.to_csv('CalorieAnalytics.csv', index=False)
         except Exception as e:
             print(str(e))
     def ProfileOpen(self):
