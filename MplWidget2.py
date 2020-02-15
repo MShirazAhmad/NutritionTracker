@@ -1,6 +1,4 @@
-# ------------------------------------------------- -----
-# -------------------- py --------------------
-# -------------------------------------------------- ----
+# This file is the part of root.py
 from PyQt5.QtWidgets import *
 
 from matplotlib.backends.backend_qt5agg import FigureCanvas
@@ -26,7 +24,7 @@ class MplWidget2(QWidget):
 
         self.canvas.axes = self.canvas.figure.add_subplot(111)
         self.setLayout(vertical_layout)
-        
+
         self.canvas.axes.clear()
         self.canvas.draw()
 
