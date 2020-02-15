@@ -650,6 +650,7 @@ class Ui_MainWindow(object):
             self.MplWidget1.canvas.axes.clear()
             self.MplWidget1.canvas.axes.plot(MassAnalytics.Date, MassAnalytics.Mass)
             self.MplWidget1.canvas.axes.set_title('Mass Plot')
+            self.MplWidget1.canvas.axes.grid(True)
             self.MplWidget1.canvas.draw()
             print(MassAnalytics)
 
@@ -661,6 +662,7 @@ class Ui_MainWindow(object):
             self.MplWidget2.canvas.axes.clear()
             self.MplWidget2.canvas.axes.plot(CaloriesDate, CaloriesSum)
             self.MplWidget2.canvas.axes.set_title('Calories Plot')
+            self.MplWidget2.canvas.axes.grid(True)
             self.MplWidget2.canvas.draw()
         except Exception as e:
             self.errMessage("Reading Table:", str(e))
@@ -758,6 +760,8 @@ class Ui_MainWindow(object):
         import os
         if os.path.exists('df.csv') == True:
             df = pd.read_csv("df.csv")
+            self.tableWidget_database.setRowCount(df.shape[0])
+            self.tableWidget_database.setColumnCount(6)
         if os.path.exists('df.csv') == False:
             df = pd.DataFrame({"Food": ["Tea", "Egg", "Rotti"],
                            "Calories": [11, 212, 312],

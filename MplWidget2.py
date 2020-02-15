@@ -26,7 +26,7 @@ class MplWidget2(QWidget):
 
         self.canvas.axes = self.canvas.figure.add_subplot(111)
         self.setLayout(vertical_layout)
-
+        
         self.canvas.axes.clear()
         self.canvas.draw()
 
@@ -45,4 +45,3 @@ ax.grid()
 fig.savefig("test.png")
 self.canvas.axes.show()
 """
-
