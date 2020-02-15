@@ -538,11 +538,11 @@ class Ui_MainWindow(object):
             MassAnalytics = pd.DataFrame({"Mass": [],
                                       "Date": []})
             MassAnalytics.Date = pd.to_datetime(MassAnalytics.Date)
-            MassAnalytics["Mass"] = MassAnalytics["Mass"].astype(str)
+            MassAnalytics["Mass"] = MassAnalytics["Mass"].astype(float)
         if os.path.exists('MassAnalytics.csv') == True:
             MassAnalytics = pd.read_csv("MassAnalytics.csv")
             MassAnalytics.Date = pd.to_datetime(MassAnalytics.Date)
-            MassAnalytics["Mass"] = MassAnalytics["Mass"].astype(str)
+            MassAnalytics["Mass"] = MassAnalytics["Mass"].astype(float)
             print(MassAnalytics)
         try:
             self.tableWidget_newentry_load()
@@ -650,6 +650,8 @@ class Ui_MainWindow(object):
             self.MplWidget1.canvas.axes.clear()
             self.MplWidget1.canvas.axes.plot(MassAnalytics.Date, MassAnalytics.Mass)
             self.MplWidget1.canvas.axes.set_title('Mass Plot')
+            self.MplWidget1.canvas.axes.set_ylabel('Mass')
+
             self.MplWidget1.canvas.axes.grid(True)
             self.MplWidget1.canvas.draw()
             print(MassAnalytics)
@@ -662,6 +664,7 @@ class Ui_MainWindow(object):
             self.MplWidget2.canvas.axes.clear()
             self.MplWidget2.canvas.axes.plot(CaloriesDate, CaloriesSum)
             self.MplWidget2.canvas.axes.set_title('Calories Plot')
+            self.MplWidget2.canvas.axes.set_ylabel('Calories')
             self.MplWidget2.canvas.axes.grid(True)
             self.MplWidget2.canvas.draw()
         except Exception as e:
