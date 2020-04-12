@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QWidget, QMessageBox, QFileDialog, QApplication, QTableWidgetItem
 
 import numpy as np
-class Ui_Dialog_Config(object):
+class Ui_Dialog_Config(object): # GUI class for Configuration Window written in PyQt5
     def setupUi(self, Dialog_Config):
         Dialog_Config.setObjectName("Dialog_Config")
         Dialog_Config.resize(357, 258)
@@ -75,7 +75,7 @@ class Ui_Dialog_Config(object):
         self.retranslateUi(Dialog_Config)
         QtCore.QMetaObject.connectSlotsByName(Dialog_Config)
 
-    def retranslateUi(self, Dialog_Config):
+    def retranslateUi(self, Dialog_Config): #Def to retranslate defined names on GUI
         _translate = QtCore.QCoreApplication.translate
         Dialog_Config.setWindowTitle(_translate("Dialog_Config", "Dialog"))
         self.label.setText(_translate("Dialog_Config", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:600;\">Welcome to Calorie Counter</span></p></body></html>"))
@@ -93,21 +93,31 @@ class Ui_Dialog_Config(object):
         self.comboBox_Activity.setItemText(3, _translate("Dialog_Config", "Very Active (Hard Exercise/Sports 6-7 Days a Week)"))
         self.comboBox_Activity.setItemText(4, _translate("Dialog_Config", "Extra Active (Very Hard Exercise/Sports & Physical Job or 2x training)"))
         self.pushButton_OK.setText(_translate("Dialog_Config", "OK"))
-
-
-
+        # Above all code is about QtGui
+        '''
+        Below push button is connected with the function BMR. If we just want to connect button 'pushButton_OK' with the function, BMR, we should
+        follow the following santax:
+                    self.pushButton_OK.clicked.connect(self.BMR(input variables here))
+        To pass variables with self, we used labmda.
+        '''
         self.pushButton_OK.clicked.connect(lambda: self.BMR(self.comboBox_Activity_2.currentText(), self.lineEdit_Name.text(), float(self.lineEdit_Age.text()), float(self.lineEdit_Height.text()),float(self.lineEdit_Mass.text()),self.comboBox_Activity.currentText()))
     def BMR(self,Gender, Name, Age, Height, Mass, Activity):
-        try:
-            global BMR
+        '''
+        All calculations for BMR goes in this function from configration window, when we press OK button, all fields (Gender, Name, Age, Height, Mass, Activity) goes in this function.
+        '''
+        try: # Python tries to execure the commands under try, if some exception happens, is simply executes the code under exception.
+            global BMR #Variable is defined globally to access in other classes/def
             if Gender == "Male":
                 BMR = 66 + (6.3 * Mass) + (12.9 * Height) - (6.8 * Age)
             if Gender == "Female":
                 BMR = 65.5 + (4.3 * Mass) + (4.7 * Height) - (4.7 * Age)
-            self.CalorieCalculation()
-            self.NewProfileWrite(Gender, Name, Age, Height, Mass, Activity,ReqCalorie)
-        except Exception as e:
-            self.errMessage("Reading Table:", str(e))
+            self.CalorieCalculation() # This function calculate required calories.
+            self.NewProfileWrite(Gender, Name, Age, Height, Mass, Activity,ReqCalorie) #This function creates configration file ('config')
+        except Exception as e: #Below line is executed if some exception happens, statement of Exception is stored in the variable 'e'
+            self.errMessage("Reading Table:", str(e)) # errMessage is a class that shows error to user with statement that if provided through e variable.
+    '''
+    Below def stores profile data into a file named 'Config'
+    '''
     def NewProfileWrite(self,Gender1, Name1, Age1, Height1, Mass1, Activity1,ReqCalorie1):
         outF = open("Config", "w")
         outF.write(str(Gender1) + "\n")
@@ -118,21 +128,39 @@ class Ui_Dialog_Config(object):
         outF.write(str(Activity1) + "\n")
         outF.write(str(ReqCalorie1) + "\n")
         outF.close()
+    '''
+    Below def calculates required calories.
+    '''
     def CalorieCalculation(self):
-        global ReqCalorie
-        if self.comboBox_Activity.currentIndex()==0:
-            ReqCalorie = BMR * 1.2
-        if self.comboBox_Activity.currentIndex() == 1:
-            ReqCalorie = BMR * 1.375
-        if self.comboBox_Activity.currentIndex() == 2:
-            ReqCalorie = BMR * 1.55
-        if self.comboBox_Activity.currentIndex() == 3:
-            ReqCalorie = BMR * 1.725
-        if self.comboBox_Activity.currentIndex() == 4:
-            ReqCalorie = BMR * 1.9
-        return ReqCalorie
+        try:
+            global ReqCalorie
+            if self.comboBox_Activity.currentIndex()==0:
+                ReqCalorie = BMR * 1.2
+            if self.comboBox_Activity.currentIndex() == 1:
+                ReqCalorie = BMR * 1.375
+            if self.comboBox_Activity.currentIndex() == 2:
+                ReqCalorie = BMR * 1.55
+            if self.comboBox_Activity.currentIndex() == 3:
+                ReqCalorie = BMR * 1.725
+            if self.comboBox_Activity.currentIndex() == 4:
+                ReqCalorie = BMR * 1.9
+            return ReqCalorie
+        except Exception as e: #Below line is executed if some exception happens, statement of Exception is stored in the variable 'e'
+            self.errMessage("Reading Table:", str(e)) # errMessage is a class that shows error to user with statement that if provided through e variable.
 
+    def errMessage(self, Text, InformativeText):
+        msgBox = QMessageBox()
+        msgBox.setWindowIcon(QtGui.QIcon('ico.ico'))
+        msgBox.setWindowTitle("Warningw")
+        msgBox.setIcon(QMessageBox.Critical)
+        msgBox.setText(Text)
+        msgBox.setInformativeText(InformativeText)
+        msgBox.setWindowTitle("Warning")
+        msgBox.exec_()
 
+'''
+Main GUI Class
+'''
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -515,10 +543,14 @@ class Ui_MainWindow(object):
         self.pushButton_database_Delete.setText(_translate("MainWindow", "Delete Selected Row"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Database), _translate("MainWindow", "Database"))
         self.menuconfiguration.setTitle(_translate("MainWindow", "Configuration"))
-        self.ProfileOpen()
+
+        '''
+        Custom COde for this GUI starts here ....
+        '''
+        self.ProfileOpen() #This function loads configration data from the file 'Config'
         self.lineEdit_Goal_3.setText(str(ReqCalorie))
         self.lineEdit_Exercise.setText("0")
-        self.pushButton_Save.clicked.connect(self.CaloriesSave)
+        self.pushButton_Save.clicked.connect(self.CaloriesSave) # Function 'CaloriesSave', is executed on click
         global CalorieAnalytics
         import pandas as pd
         if os.path.exists('CalorieAnalytics.csv') == False:
@@ -598,7 +630,7 @@ class Ui_MainWindow(object):
         except Exception as e:
             print(str(e))
     def ProfileOpen(self):
-        Profile = [line.rstrip() for line in open('Config')]
+        Profile = [line.rstrip() for line in open('Config')] #Loading 'Config' file into Profile
         global Gender
         global Name
         global Age
@@ -711,18 +743,22 @@ class Ui_MainWindow(object):
 
     def pltConfigWindow(self):
         self.Dialog_Config = QtWidgets.QDialog()
-        self.ui = Ui_Dialog_Config()
-        self.ui.setupUi(self.Dialog_Config)
+        self.uic = Ui_Dialog_Config()
+        self.uic.setupUi(self.Dialog_Config)
 
         self.Dialog_Config.show()
-
+    def errMessage(self, Text, InformativeText):
+        msgBox = QMessageBox()
+        msgBox.setWindowIcon(QtGui.QIcon('ico.ico'))
+        msgBox.setWindowTitle("Warning")
+        msgBox.setIcon(QMessageBox.Critical)
+        msgBox.setText(Text)
+        msgBox.setInformativeText(InformativeText)
+        msgBox.setWindowTitle("Warning")
+        msgBox.exec_()
 
 
     def readTable_tableWidget_entry(self):
-
-   #     app_conf = QtWidgets.QApplication(sys.argv)
-
-   #     sys.exit(app_conf.exec_())
         import pandas as pd
         global dfe
         tableDimensions = [int(self.tableWidget_entry.rowCount()), int(self.tableWidget_entry.columnCount())]
@@ -766,18 +802,19 @@ class Ui_MainWindow(object):
             self.tableWidget_database.setRowCount(df.shape[0])
             self.tableWidget_database.setColumnCount(6)
         if os.path.exists('df.csv') == False:
-            df = pd.DataFrame({"Food": ["Tea", "Egg", "Rotti"],
-                           "Calories": [11, 212, 312],
-                           "Carbs": [112, 2122, 3212],
-                           "Fat": [11, 212, 321], "Protein": [11, 212, 321], "Fibre": [11, 212, 321]})
-        try:
+            df = pd.DataFrame({"Food": [],
+                           "Calories": [],
+                           "Carbs": [],
+                           "Fat": [],
+                           "Protein": [],
+                           "Fibre": []})
+        try: # Loading data into table
             i = 0
             for p in list(df):
                 j = 0
                 ##print(p)
                 while j < df.shape[0]:
                     A = []
-                    # ###print(data[j,i])
                     A = str(df[p].loc[j])
                     cellinfo = QTableWidgetItem(A)
                     self.tableWidget_database.setItem(j, i, cellinfo)
@@ -800,29 +837,24 @@ class Ui_MainWindow(object):
             self.errMessage("Printing to Table:", str(e))
     def NewItem(self):
         import pandas as pd
-        df = pd.DataFrame({"Food": ["Tea", "Egg", "Rotti"],
-                           "Calories": [11, 212, 312],
-                           "Carbs": [112, 2122, 3212],
-                           "Fat": [11, 212, 321], "Protein": [11, 212, 321], "Fibre": [11, 212, 321],
-                           "Date": [11, 212, 321]})
-    #    combo = QtWidgets.QComboBox()
-     #   combo.addItems(list(df))
-        # self.tableWidget.setItem(data.shape[1], data.shape[0], cellinfo)
-     #   self.tableWidget_entry.setCellWidget(0, 0, combo)
+        df = pd.DataFrame({"Food": [],
+                           "Calories": [],
+                           "Carbs": [],
+                           "Fat": [],
+                           "Protein": [],
+                           "Fibre": [],
+                           "Date": []})
     def tableWidget_newentry_load(self):  # Prints data file to table
         import pandas as pd
         global dfe
         dfe = pd.read_csv("dfe.csv")
         self.tableWidget_entry.setRowCount(dfe.shape[0])
-        #print(dfe)
         try:
             i = 0
             for p in list(dfe):
                 j = 0
-                ##print(p)
                 while j < dfe.shape[0]:
                     A = []
-                    # ###print(data[j,i])
                     A = str(dfe[p].loc[j])
                     cellinfo = QTableWidgetItem(A)
                     self.tableWidget_entry.setItem(j, i, cellinfo)
@@ -847,7 +879,6 @@ class Ui_MainWindow(object):
         try:
             j=0
             for p in list(df.loc[self.comboBox_pickfood.currentIndex()]):
-          #      #print(p)
                 A = str(p)
                 cellinfo = QTableWidgetItem(A)
                 self.tableWidget_entry.setItem(int(self.tableWidget_entry.rowCount()-1), j, cellinfo)
@@ -874,7 +905,7 @@ class Ui_MainWindow(object):
     def errMessage(self, Text, InformativeText):
         msgBox = QMessageBox()
         msgBox.setWindowIcon(QtGui.QIcon('ico.ico'))
-        msgBox.setWindowTitle("PhysPlot - Plot Window")
+        msgBox.setWindowTitle("Warning")
         msgBox.setIcon(QMessageBox.Critical)
         msgBox.setText(Text)
         msgBox.setInformativeText(InformativeText)
@@ -883,14 +914,16 @@ class Ui_MainWindow(object):
 
 
 
-
+'''
+There are three Plot fields in this software, each of them is defined in a separate File starts with MplWidget
+'''
 from MplWidget import MplWidget
 from MplWidget1 import MplWidget1
 from MplWidget2 import MplWidget2
 
 if __name__ == "__main__":
     import os
-    if os.path.exists('Config') == False:
+    if os.path.exists('Config') == False: # If configration does not exist, this GUI is executed
         import sys
         app = QtWidgets.QApplication(sys.argv)
         Dialog_Config = QtWidgets.QDialog()
@@ -898,7 +931,7 @@ if __name__ == "__main__":
         ui.setupUi(Dialog_Config)
         Dialog_Config.show()
         sys.exit(app.exec_())
-    if os.path.exists('Config') == True:
+    if os.path.exists('Config') == True:  # If configration does exist, this GUI is executed
         import sys
         app = QtWidgets.QApplication(sys.argv)
         MainWindow = QtWidgets.QMainWindow()
